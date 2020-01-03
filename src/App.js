@@ -1,21 +1,26 @@
 import React from 'react';
-import PropTypes from "prop-types";
+import axios from "axios";
 
 class App extends React.Component{
   state = {
-    isLoding: true
+    isLoding: true,
+    movies: []
   };
-  // 6초 뒤 바뀐다!
+  
+  getMovies = async () => {
+    const {data:{data:{movies}}} = await axios.get("https://yts-proxy.now.sh/list_movies.json?sort_by=rating")
+    // this.setState({movies:movies}) // 아래의 movies와 동일한 코드...
+    this.setState({movies, isLoding:false})
+  }
+
   componentDidMount(){
-    setTimeout(() => {
-      this.setState({isLoding:false})
-    }, 6000)
+    this.getMovies();
   }
 
 
   render() {
     const {isLoding} = this.state;
-    return <div>{isLoding ? "Loading": "We are ready"}
+    return <div>{isLoding ? "Loading...": "We are ready"}
 
     </div>;
   }
